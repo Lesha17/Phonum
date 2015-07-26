@@ -84,7 +84,7 @@ public class CallListUtils {
         }
     }
 
-    public static void refreshNumbers(Context context, NumberListAdapter adapter){
+    public static List<Number> refreshNumbers(Context context){
         List<Number> numbersFromSavedDatabase = getAllNumberFromSavedDatabase(context);
         List<Number> numbersFromCallLog = getAllNumbersFromCallLog(context);
 
@@ -122,7 +122,7 @@ public class CallListUtils {
         checkLast(numbersFromSavedDatabase);
         sortByLast(numbersFromSavedDatabase, 0,  numbersFromSavedDatabase.size() - 1);
 
-        adapter.addAll(numbersFromSavedDatabase);
+        return numbersFromSavedDatabase;
     }
 
     //Sorted by number

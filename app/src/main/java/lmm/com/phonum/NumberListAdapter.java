@@ -27,6 +27,7 @@ import lmm.com.phonum.utils.CallListUtils;
 public class NumberListAdapter extends ArrayAdapter<CallListUtils.Number> {
     private final Context context;
     private static final double MAX_RATIO = 1.5;
+    private OnItemsAddedListener listener;
 
     public NumberListAdapter(Context context){
         super(context, R.layout.number_list_item);
@@ -125,6 +126,34 @@ public class NumberListAdapter extends ArrayAdapter<CallListUtils.Number> {
         return adapter;
     }
 
+    @Override
+    public void add(CallListUtils.Number object) {
+        super.add(object);
+        if(listener != null) {
+            listener.itemsAdded(this);
+        }
+    }
+
+    @Override
+    public void addAll(Collection<? extends CallListUtils.Number> collection) {
+        super.addAll(collection);
+        if(listener != null) {
+            listener.itemsAdded(this);
+        }
+    }
+
+    @Override
+    public void addAll(CallListUtils.Number... items) {
+        super.addAll(items);
+        if(listener != null) {
+            listener.itemsAdded(this);
+        }
+    }
+
+    public void setItemsAddedListener(OnItemsAddedListener listener){
+        this.listener = listener;
+    }
+
     private static boolean any_starts_with(String in, String str){
         for(String s : in.toUpperCase().split(" ")){
             if(s.startsWith(str.toUpperCase())){
@@ -132,5 +161,9 @@ public class NumberListAdapter extends ArrayAdapter<CallListUtils.Number> {
             }
         }
         return false;
+    }
+
+    public static interface OnItemsAddedListener{
+        public void itemsAdded(NumberListAdapter adapter);
     }
 }

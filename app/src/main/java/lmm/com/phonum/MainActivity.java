@@ -252,11 +252,10 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void showNumber(CallListUtils.Number number, int position) {
         Fragment numberInfo = NumberInfoFrgment.newInstance(number);
+        YoYo.with(Techniques.SlideInRight).duration(250).playOn(findViewById(R.id.container));
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, numberInfo)
-                .addToBackStack(null)
                 .commit();
-        YoYo.with(Techniques.SlideInRight).duration(350).playOn(findViewById(R.id.container));
     }
 
     @Override
@@ -268,7 +267,6 @@ public class MainActivity extends ActionBarActivity
             public void onClick(View v) {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.container, fragment)
-                        .addToBackStack(null)
                         .commit();
             }
         });
@@ -276,6 +274,7 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void returnToolbarHomeState() {
+        YoYo.with(Techniques.SlideInLeft).duration(250).playOn(findViewById(R.id.container));
         drawerResult.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         drawerResult.getActionBarDrawerToggle().setDrawerIndicatorEnabled(true);
     }

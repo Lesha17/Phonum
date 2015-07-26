@@ -1,6 +1,8 @@
 package lmm.com.phonum;
 
 import android.app.Activity;
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,6 +13,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.List;
 
 import lmm.com.phonum.utils.CallListUtils;
 
@@ -45,6 +49,8 @@ public class NumberListFragment extends android.support.v4.app.Fragment implemen
 
     private CallListUtils.Number item1;
 
+    private NumberListLoader mLoader;
+
     public static NumberListFragment newInstance(String param) {
         NumberListFragment fragment = new NumberListFragment();
         Bundle args = new Bundle();
@@ -70,7 +76,8 @@ public class NumberListFragment extends android.support.v4.app.Fragment implemen
 
         mAdapter = new NumberListAdapter(getActivity());
 
-        CallListUtils.refreshNumbers(getActivity(), mAdapter);
+        mLoader = new NumberListLoader();
+        mLoader.execute(getActivity());
     }
 
     @Override
@@ -155,6 +162,20 @@ public class NumberListFragment extends android.support.v4.app.Fragment implemen
     public interface OnFragmentInteractionListener {
         public void showNumber(CallListUtils.Number number, int position);
         public void returnToolbarHomeState();
+    }
+
+    private class NumberListLoader extends AsyncTask<Context, Void, List<CallListUtils.Number>>{
+        @Override
+        protected List<CallListUtils.Number> doInBackground(Context... params) {
+            List<CallListUtils.Number> numbers = CallListUtils.refreshNumbers(params[0]);
+            return numbers;
+        }
+
+        @Override
+        protected void onPostExecute(List<CallListUtils.Number> numbers) {
+            super.onPostExecute(numbers);
+            mAdapter.addAll(numbers);
+        }
     }
 
 }
