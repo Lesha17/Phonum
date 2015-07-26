@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Phonum</string>
+    <string name="current">Текушие</string>
+    <string name="deferred">Отложенные</string>
+    <string name="done">Выполненные</string>
+    <string name="all">Все</string>
+    <string name="add_category">Добавить категорию</string>
+    <string name="deleted">Корзина</string>
+    <string name="settings">Настройки</string>
+    <string name="help">Справка</string>
+    <string name="about">О программе</string>
+    <string name="search">Поиск</string>
+    <string name="action_search">Поиск</string>
+    <string name="action_show_assigned">Показать закрёпленные</string>
+
+    <string name="add_contact">Добавить в контакты</string>
+    <string name="trash">Удалить</string>
+    <string name="assign">Закрепить</string>
+    <string name="defer">Отложить</string>
+    <string name="act_done">Выполнено</string>
+    <string name="change_category">Изменить категорию</string>
+
+</resources>

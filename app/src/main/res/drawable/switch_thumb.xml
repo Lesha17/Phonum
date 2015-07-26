@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <scale xmlns:android="http://schemas.android.com/apk/res/android"
+    android:scaleGravity="center"
+        android:scaleWidth="40%"
+        android:scaleHeight="40%"
+    android:drawable="@drawable/tack"/>

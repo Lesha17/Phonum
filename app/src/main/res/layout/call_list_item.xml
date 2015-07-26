@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView android:id="@+id/call_ico"
+        android:src="@drawable/outgoing"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="5dp"
+        android:layout_width="@dimen/call_icon_size"
+        android:layout_height="@dimen/call_icon_size" />
+
+    <TextView android:id="@+id/date"
+        android:layout_toRightOf="@id/call_ico"
+        android:textColor="@color/secondary_text_default_material_light"
+        android:textSize="@dimen/default_text_size"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView android:id="@+id/duration"
+        android:layout_toRightOf="@id/call_ico"
+        android:layout_below="@id/date"
+        android:textColor="@color/secondary_text_default_material_light"
+        android:textSize="@dimen/default_text_size"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</RelativeLayout>
