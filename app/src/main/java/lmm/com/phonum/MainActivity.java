@@ -38,6 +38,8 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
+import java.util.List;
+
 import lmm.com.phonum.utils.CallListUtils;
 
 
@@ -57,6 +59,8 @@ public class MainActivity extends ActionBarActivity
     private Switch assigned_switch;
 
     private NumberListFragment fragment;
+
+    private List<String> categories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +123,7 @@ public class MainActivity extends ActionBarActivity
         }).withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l, IDrawerItem iDrawerItem) {
-
+                onDrawerItemSelected(i);
             }
         }).withOnDrawerItemLongClickListener(new Drawer.OnDrawerItemLongClickListener() {
             @Override
@@ -141,6 +145,32 @@ public class MainActivity extends ActionBarActivity
             drawerResult.closeDrawer();
         } else {
             super.onBackPressed();
+        }
+    }
+
+    private void onDrawerItemSelected(int position){
+        Log.d("Drawer pos  ", String.valueOf(position));
+        DrawerItemHelper helper = new DrawerItemHelper();
+        if(helper.isRecent(position)){
+            fragment.showRecent();
+        } else if(helper.isDeferred(position)){
+            fragment.showDeferred();
+        } else if(helper.isDone(position)){
+            fragment.showDone();
+        }else if(helper.isAll(position)){
+            fragment.showAll();
+        }else if(helper.isAddCategory(position)){
+
+        } else if(helper.isCategory(position)){
+            fragment.showByCategory(helper.getCategoryString(position));
+        } else if(helper.isTrash(position)){
+
+        } else if(helper.isSettings(position)){
+
+        } else if(helper.isHelp(position)){
+
+        } else if(helper.isAbout(position)){
+
         }
     }
 
@@ -277,5 +307,68 @@ public class MainActivity extends ActionBarActivity
         YoYo.with(Techniques.SlideInLeft).duration(250).playOn(findViewById(R.id.container));
         drawerResult.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         drawerResult.getActionBarDrawerToggle().setDrawerIndicatorEnabled(true);
+    }
+
+    @Override
+    public void refreshCategories(List<String> categories) {
+        this.categories = categories;
+    }
+
+    private class DrawerItemHelper{
+        public static final int HEADERS_COUNT = 1;
+        public static final int RECENT = 1;
+        public static final int DEFERRED = 2;
+        public static final int DONE = 3;
+        public static final int ALL = 4;
+        public static final int FIRST_CATEGORY = 6;
+
+        public static final int TRASH_AFTER_LAST_CATEGORY = 2;
+        public static final int SETTINGS_AFTER_LAST_CATEGORY = 4;
+        public static final int HELP_AFTER_LAST_CATEGORY = 5;
+        public static final int ABOUT_AFTER_LAST_CATEGORY = 6;
+
+        public boolean isRecent(int position){
+            return (position == RECENT);
+        }
+
+        public boolean isDeferred(int position){
+            return (position == DEFERRED);
+        }
+
+        public boolean isDone(int position){
+            return (position == DONE);
+        }
+
+        public boolean isAll(int position){
+            return (position == ALL);
+        }
+
+        public boolean isAddCategory(int position){
+            return (position == FIRST_CATEGORY && categories.size() == 0);
+        }
+
+        public boolean isCategory(int position){
+            return (FIRST_CATEGORY <= position && position <= FIRST_CATEGORY + categories.size());
+        }
+
+        public boolean isTrash(int position){
+            return (position == FIRST_CATEGORY + categories.size() + TRASH_AFTER_LAST_CATEGORY);
+        }
+
+        public boolean isSettings(int position){
+            return (position == FIRST_CATEGORY + categories.size() + SETTINGS_AFTER_LAST_CATEGORY);
+        }
+
+        public boolean isHelp(int position){
+            return (position == FIRST_CATEGORY + categories.size() + HELP_AFTER_LAST_CATEGORY);
+        }
+
+        public boolean isAbout(int position){
+            return (position == FIRST_CATEGORY + categories.size() + ABOUT_AFTER_LAST_CATEGORY);
+        }
+
+        public String getCategoryString(int position){
+            return categories.get(position - FIRST_CATEGORY);
+        }
     }
 }

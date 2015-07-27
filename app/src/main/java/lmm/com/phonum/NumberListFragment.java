@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lmm.com.phonum.utils.CallListUtils;
@@ -41,11 +42,18 @@ public class NumberListFragment extends android.support.v4.app.Fragment implemen
      */
     private ListView mListView;
 
+    private boolean searching = false;
+    private String search_q = "";
+
     /**
      * The Adapter which will be used to populate the ListView/GridView with
      * Views.
      */
     private NumberListAdapter mAdapter;
+
+    private NumberListAdapter currentAdapter;
+
+    private List<String> categories;
 
     private CallListUtils.Number item1;
 
@@ -74,7 +82,18 @@ public class NumberListFragment extends android.support.v4.app.Fragment implemen
             callCategory = getArguments().getString(CALL_CATEGORY);
         }
 
+        categories = new ArrayList<>();
+
         mAdapter = new NumberListAdapter(getActivity());
+        mAdapter.setItemsAddedListener(new NumberListAdapter.OnItemsAddedListener() {
+            @Override
+            public void itemsAdded(NumberListAdapter adapter) {
+                NumberListFragment.this.categories = adapter.getCategories();
+                if(mListener != null){
+                    mListener.refreshCategories(categories);
+                }
+            }
+        });
 
         mLoader = new NumberListLoader();
         mLoader.execute(getActivity());
@@ -87,7 +106,8 @@ public class NumberListFragment extends android.support.v4.app.Fragment implemen
 
         // Set the adapter
         mListView = (ListView)view.findViewById(R.id.list_view);
-        mListView.setAdapter(mAdapter);
+        currentAdapter = mAdapter;
+        mListView.setAdapter(currentAdapter);
 
         mListView.setItemsCanFocus(true);
 
@@ -124,7 +144,11 @@ public class NumberListFragment extends android.support.v4.app.Fragment implemen
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (null != mListener) {
-            mListener.showNumber(mAdapter.getItem(position), position);
+            if(!searching) {
+                mListener.showNumber(currentAdapter.getItem(position), position);
+            } else {
+                mListener.showNumber(currentAdapter.search(search_q).getItem(position), position);
+            }
         }
     }
 
@@ -142,11 +166,44 @@ public class NumberListFragment extends android.support.v4.app.Fragment implemen
     }
 
     public void showSearchResults(String query){
-        mListView.setAdapter(mAdapter.search(query));
+        search_q = query;
+        searching = true;
+        mListView.setAdapter(currentAdapter.search(query));
     }
 
     public void reset_search(){
+        searching = false;
+        mListView.setAdapter(currentAdapter);
+    }
+
+    public void showAll(){
+        currentAdapter = mAdapter;
         mListView.setAdapter(mAdapter);
+    }
+
+    public void showRecent(){
+        currentAdapter = mAdapter.recent();
+        mListView.setAdapter(currentAdapter);
+    }
+
+    public void showAssigned(){
+        currentAdapter = mAdapter.assigned();
+        mListView.setAdapter(currentAdapter);
+    }
+
+    public void showDeferred(){
+        currentAdapter = mAdapter.deferred();
+        mListView.setAdapter(currentAdapter);
+    }
+
+    public void showDone(){
+        currentAdapter = mAdapter.done();
+        mListView.setAdapter(currentAdapter);
+    }
+
+    public void showByCategory(String category){
+        currentAdapter = mAdapter.byCategory(category);
+        mListView.setAdapter(currentAdapter);
     }
 
     /**
@@ -162,6 +219,7 @@ public class NumberListFragment extends android.support.v4.app.Fragment implemen
     public interface OnFragmentInteractionListener {
         public void showNumber(CallListUtils.Number number, int position);
         public void returnToolbarHomeState();
+        public void refreshCategories(List<String> categories);
     }
 
     private class NumberListLoader extends AsyncTask<Context, Void, List<CallListUtils.Number>>{

@@ -47,6 +47,8 @@ public class CallListUtils {
         public String category;
         public String hint;
         public boolean assigned;
+        public boolean deferred;
+        public boolean done;
         public long last;
 
         public static class Call{
@@ -63,6 +65,9 @@ public class CallListUtils {
 
         public Number(){
             this.calls = new ArrayList<>();
+            this.assigned = false;
+            this.deferred= false;
+            this.done = false;
         }
 
         public Number(String number){

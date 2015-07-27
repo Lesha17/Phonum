@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import lmm.com.phonum.utils.CallListUtils;
 
@@ -47,15 +48,15 @@ public class NumberListAdapter extends ArrayAdapter<CallListUtils.Number> {
         //TODO: Set OnClick Listeners
 
         ImageButton btn1 = (ImageButton)view.findViewById(R.id.button1);
-        btn1.setImageDrawable(context.getDrawable(R.drawable.phone));
+        btn1.setImageDrawable(context.getResources().getDrawable(R.drawable.phone));
         //btn1.setOnClickListener(item.btn1click);
 
         ImageButton btn2 = (ImageButton)view.findViewById(R.id.button2);
-        btn2.setImageDrawable(context.getDrawable(R.drawable.tack));
+        btn2.setImageDrawable(context.getResources().getDrawable(R.drawable.tack));
         //btn2.setOnClickListener(item.btn2click);
 
         ImageButton btn3 = (ImageButton)view.findViewById(R.id.button3);
-        btn3.setImageDrawable(context.getDrawable(R.drawable.edit));
+        btn3.setImageDrawable(context.getResources().getDrawable(R.drawable.edit));
         //btn3.setOnClickListener(item.btn3click);
 
         final TextView label1 = (TextView)view.findViewById(R.id.label1);
@@ -75,16 +76,16 @@ public class NumberListAdapter extends ArrayAdapter<CallListUtils.Number> {
         int calls_size = item.calls.size();
 
         ImageView ico1 = (ImageView)view.findViewById(R.id.ico1);
-        ico1.setImageDrawable(context.getDrawable(CallListUtils.getDrawableIdFromType(item.calls.get(0).type)));
+        ico1.setImageDrawable(context.getResources().getDrawable(CallListUtils.getDrawableIdFromType(item.calls.get(0).type)));
 
         if(calls_size > 1){
             try{
-                Drawable i2 = context.getDrawable(CallListUtils.getDrawableIdFromType(item.calls.get(1).type));
+                Drawable i2 = context.getResources().getDrawable(CallListUtils.getDrawableIdFromType(item.calls.get(1).type));
                 ImageView ico2 = (ImageView)view.findViewById(R.id.ico2);
                 ico2.setImageDrawable(i2);
                 ico2.setVisibility(View.VISIBLE);
                 if(calls_size > 2){
-                    Drawable i3 = context.getDrawable(CallListUtils.getDrawableIdFromType(item.calls.get(2).type));
+                    Drawable i3 = context.getResources().getDrawable(CallListUtils.getDrawableIdFromType(item.calls.get(2).type));
                     ImageView ico3 = (ImageView)view.findViewById(R.id.ico3);
                     ico3.setImageDrawable(i3);
                     ico3.setVisibility(View.VISIBLE);
@@ -100,6 +101,17 @@ public class NumberListAdapter extends ArrayAdapter<CallListUtils.Number> {
         label3.setText(format.format(date));
 
         return view;
+    }
+
+    public List<String> getCategories(){
+        ArrayList<String> categories = new ArrayList<>();
+
+        for(int i = 0; i < getCount(); ++i){
+            if(!categories.contains(getItem(i).category)){
+                categories.add(getItem(i).category);
+            }
+        }
+        return categories;
     }
 
     public NumberListAdapter search(String str){
@@ -122,6 +134,70 @@ public class NumberListAdapter extends ArrayAdapter<CallListUtils.Number> {
             }
         }
 
+
+        return adapter;
+    }
+
+    public NumberListAdapter recent(){
+        NumberListAdapter adapter = new NumberListAdapter(context);
+
+        for(int i = 0; i < getCount(); ++i){
+            CallListUtils.Number item = getItem(i);
+            if(!item.deferred && !item.done){
+                adapter.add(item);
+            }
+        }
+
+        return adapter;
+    }
+
+    public NumberListAdapter assigned(){
+        NumberListAdapter adapter = new NumberListAdapter(context);
+
+        for(int i = 0; i < getCount(); ++i){
+            if(getItem(i).assigned){
+                adapter.add(getItem(i));
+            }
+        }
+
+        return adapter;
+    }
+
+    public NumberListAdapter deferred(){
+        NumberListAdapter adapter = new NumberListAdapter(context);
+
+        for(int i = 0; i < getCount(); ++i){
+            if(getItem(i).deferred){
+                adapter.add(getItem(i));
+            }
+        }
+
+        return adapter;
+    }
+
+    public NumberListAdapter done(){
+        NumberListAdapter adapter = new NumberListAdapter(context);
+
+        for(int i = 0; i < getCount(); ++i){
+            if(getItem(i).done){
+                adapter.add(getItem(i));
+            }
+        }
+
+        return adapter;
+    }
+
+    public NumberListAdapter byCategory(String category){
+        NumberListAdapter adapter = new NumberListAdapter(context);
+
+        for(int i = 0; i < getCount(); ++i){
+            CallListUtils.Number item = getItem(i);
+            if(item.category != null) {
+                if (item.category.equals(category)) {
+                    adapter.add(item);
+                }
+            }
+        }
 
         return adapter;
     }
